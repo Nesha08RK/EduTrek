@@ -76,7 +76,7 @@ npm install
 Create a `.env` file in the server directory:
 ```env
 PORT=5000
-MONGO_URI=mongodb+srv://midunar23cse_db_user:<password>@edutrek.jgnsaro.mongodb.net/
+mongodb+srv://Nesharavichandran:<password>@cluster0.nbp0wbc.mongodb.net/EduTrek?retryWrites=true&w=majority
 JWT_SECRET=your_jwt_secret_here
 CORS_ORIGIN=http://localhost:5173
 ```
