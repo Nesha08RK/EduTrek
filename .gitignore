@@ -1,0 +1,17 @@
+# Node modules
+client/node_modules/
+server/node_modules/
+
+# Dependency lock files
+*.log
+
+# Environment files
+.env
+
+# Build output
+dist/
+build/
+
+# IDE files
+.vscode/
+node_modules/
