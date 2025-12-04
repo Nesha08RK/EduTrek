@@ -20,16 +20,13 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-
 const PORT = process.env.PORT || 5000;
 
-// 🌍 Allowed origins (adds localhost & production URL automatically)
 const allowedOrigins = [
   "http://localhost:5173",
-  process.env.CORS_ORIGIN   // Render / Vercel Frontend URL
+  "https://edu-trek-60sooz9iy-nesha-r-ks-projects.vercel.app"   // <-- Correct production UI
 ];
 
-// ⭐ Custom CORS middleware
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -47,11 +44,9 @@ app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 app.use(morgan("dev"));
 
-// Static uploads
 const uploadsPath = path.join(path.resolve(), "uploads");
 app.use("/uploads", express.static(uploadsPath));
 
-// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/admin", adminRoutes);
@@ -69,25 +64,21 @@ async function start() {
     await mongoose.connect(process.env.MONGO_URI, { dbName: "EduTrek" });
     console.log("MongoDB connected");
 
-    // Socket.IO setup
     const io = new SocketIOServer(server, {
       cors: { origin: allowedOrigins, credentials: true },
     });
 
     io.on("connection", (socket) => {
-      console.log("Socket connected:", socket.id);
-
+      console.log("socket connected:", socket.id);
       socket.on("chat:message", (msg) => {
         io.emit("chat:message", { from: socket.id, text: msg });
       });
     });
 
-    server.listen(PORT, () => {
-      console.log(`🚀 API running on port ${PORT}`);
-    });
+    server.listen(PORT, () => console.log(`🚀 API running on port ${PORT}`));
 
   } catch (err) {
-    console.error("❌ Failed to start server", err);
+    console.error("Failed to start server", err);
     process.exit(1);
   }
 }
