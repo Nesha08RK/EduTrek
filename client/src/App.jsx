@@ -1,5 +1,8 @@
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
+import { useEffect } from 'react'
+import axios from 'axios'
+
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import AnimatedBackground from './components/AnimatedBackground'
@@ -20,22 +23,28 @@ import CourseAssessment from './components/CourseAssessment'
 import CourseCertificate from './components/CourseCertificate'
 
 function App() {
+
+  // 🔥 Test Backend connectivity
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_API_URL}/api/health`)
+      .then(res => console.log("Backend Response:", res.data))
+      .catch(err => console.error("API Error:", err));
+  }, []);
+
   return (
     <AuthProvider>
       <div className="relative min-h-screen w-full overflow-hidden flex flex-col">
         <AnimatedBackground />
         <Navigation />
 
-        {/* Common layout wrapper for alignment */}
-        {/* 🔽 changed w-full → w-screen so white containers can stretch full browser width */}
         <main className="flex-1 w-screen pt-16">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/courses" element={<Courses />} />
-            {/* The route for the specific course detail page with a dynamic ID */}
             <Route path="/course/:id" element={<CourseDetail />} />
+
             <Route
               path="/course/:courseId/assessment"
               element={
@@ -44,6 +53,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/course/:courseId/certificate"
               element={
@@ -52,6 +62,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/checkout/:id"
               element={
@@ -60,6 +71,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/quiz"
               element={
@@ -68,6 +80,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/student-dashboard"
               element={
@@ -76,6 +89,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/instructor-dashboard"
               element={
@@ -84,6 +98,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/admin-dashboard"
               element={
@@ -92,14 +107,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route path="/games" element={<Games />} />
             <Route path="/chatbot" element={<ChatbotPage />} />
           </Routes>
         </main>
       </div>
     </AuthProvider>
-  )
+  );
 }
 
-export default App
-
+export default App;
