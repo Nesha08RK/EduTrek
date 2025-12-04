@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import path from 'path';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
+
 import authRoutes from './routes/authRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
@@ -19,18 +20,22 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-const PORT = process.env.PORT || 5000;
-const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173';
 
-app.use(cors({ origin: CORS_ORIGIN, credentials: true }));
+const PORT = process.env.PORT; // Important for Render
+const CORS_ORIGIN = process.env.CORS_ORIGIN;
+
+app.use(cors({
+  origin: CORS_ORIGIN,
+  credentials: true
+}));
+
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
-// Serve uploaded files
-const uploadsPath = path.join(path.resolve(), 'uploads');
-app.use('/uploads', express.static(uploadsPath));
 app.use(morgan('dev'));
 
-// routes
+const uploadsPath = path.join(path.resolve(), 'uploads');
+app.use('/uploads', express.static(uploadsPath));
+
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/admin', adminRoutes);
@@ -40,26 +45,34 @@ app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/quiz', quizRoutes);
 
 app.get('/api/health', (req, res) => {
-	res.json({ status: 'ok', service: 'edutrek-api' });
+  res.json({ status: 'ok', service: 'edutrek-api' });
 });
 
 async function start() {
-	try {
-		const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/edutrek';
-		await mongoose.connect(uri, { dbName: 'EduTrek' });
-		console.log('MongoDB connected');
-		const io = new SocketIOServer(server, { cors: { origin: CORS_ORIGIN, credentials: true } });
-		io.on('connection', (socket) => {
-			console.log('socket connected', socket.id);
-			socket.on('chat:message', (msg) => {
-				io.emit('chat:message', { from: socket.id, text: msg });
-			});
-		});
-		server.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));
-	} catch (err) {
-		console.error('Failed to start server', err);
-		process.exit(1);
-	}
+  try {
+    const uri = process.env.MONGO_URI;
+    await mongoose.connect(uri, { dbName: 'EduTrek' });
+    console.log("MongoDB connected");
+
+    const io = new SocketIOServer(server, {
+      cors: { origin: CORS_ORIGIN, credentials: true }
+    });
+
+    io.on("connection", (socket) => {
+      console.log("Socket connected:", socket.id);
+      socket.on("chat:message", (msg) => {
+        io.emit("chat:message", { from: socket.id, text: msg });
+      });
+    });
+
+    server.listen(PORT, () => {
+      console.log(`🚀 API running on port ${PORT}`);
+    });
+
+  } catch (err) {
+    console.error("❌ Failed to start server", err);
+    process.exit(1);
+  }
 }
 
 start();
