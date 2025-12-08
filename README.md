@@ -1,5 +1,7 @@
 # EduTrek - Full-Stack E-Learning Platform
 
+**[Live Demo](https://edu-trek-60sooz9iy-nesha-r-ks-projects.vercel.app/)**
+
 A comprehensive e-learning platform built with React, Node.js, and MongoDB, featuring role-based access control, interactive courses, gamification, and AI-powered assistance.
 
 ## 🚀 Features
