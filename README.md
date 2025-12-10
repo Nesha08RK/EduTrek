@@ -11,7 +11,6 @@ A comprehensive e-learning platform built with React, Node.js, and MongoDB, feat
 - **Course Management**: Create, manage, and enroll in courses with multiple videos, quizzes, and assignments
 - **Real-time Dashboard**: Live progress tracking and analytics for all user roles
 - **Interactive Learning**: Mind trick games and AI-powered chatbot for enhanced learning
-- **Payment Integration**: Support for multiple payment gateways (Stripe, Razorpay, PayPal)
 - **Certificate Generation**: QR code-enabled certificates upon course completion
 
 ### User Roles
@@ -144,10 +143,6 @@ npm start
 
 ### Chatbot
 - `POST /api/chatbot/message` - Send message to AI assistant
-
-### Payments
-- `POST /api/payments/create-intent` - Create payment intent
-- `POST /api/payments/confirm` - Confirm payment
 
 ### Certificates
 - `POST /api/certificates/generate` - Generate certificate
